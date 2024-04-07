@@ -38,6 +38,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * 		Le damos un criterio de parada, si el index es igual al numero de variedades, 
 		 * tiene que parar ya que se habrá hecho la decision con todas las variedades, 
 		 * siempre y cuando el indice inicial sea 0.
+		 * 
 		 */
 		
 		return v -> v.index() == FactoriaHuertos.getNumeroVariedades();
@@ -63,7 +64,18 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 */
 		List<Integer> opciones=List2.empty();
 		if(index<FactoriaHuertos.getNumeroHuertos()) {
-			
+			/*
+			 * 			En este caso se puede plantear de la siguiente manera, tenemos la variable reparto,
+			 *  que es la que nos dice las variedades que estan plantadas en cada huerto, vamos a recorrer 
+			 *  reparto para saber en los huertos que estan plantadas las variedades ya plantadas, si en un huerto 
+			 *  hay una incompatible con la variedad de mi vertice actual, ese huerto se descartara como opcion, 
+			 *  por lo tanto quedaran los huertos restantes.
+			 *  
+			 *  		Despues tenemos que comprobar si hay metros disponibles, cogeremos de la variedad del vertice 
+			 *  actual los metros requeridos, y comprobaremos si en los huertos que tengo como opcion se puede plantar, 
+			 *  en caso de que se plante en un huerto, habra que actualizar la lista de metros disponible despues de 
+			 *  plantar la variedad en el huerto seleccionado plantado (Este ultimo paso nose si hay que hacerlo aquí).
+			 */
 		}
 		return null;
 	}
