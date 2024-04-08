@@ -2,7 +2,8 @@ package ej_1;
 
 import us.lsi.graphs.virtual.SimpleEdgeAction;
 
-public record HuertoEdge(HuertoVertex source, HuertoVertex target, Integer action, Double weight)
+public record HuertoEdge(HuertoVertex source, HuertoVertex target, 
+		Integer action, Double weight)
 	implements SimpleEdgeAction<HuertoVertex, Integer> {
 	//action decision que se toma que cojamos una arista o otra, de tipo del que convenga
 	
