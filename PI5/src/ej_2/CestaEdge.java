@@ -6,7 +6,7 @@ public record CestaEdge(CestaVertex source, CestaVertex target, Integer action, 
 	implements SimpleEdgeAction<CestaVertex, Integer> {
 
 	public static CestaEdge of(CestaVertex v1, CestaVertex v2, Integer a) {
-		return new CestaEdge(v1, v2, a, null);
+		return new CestaEdge(v1, v2, a, (double) a);
 	}
 
 }

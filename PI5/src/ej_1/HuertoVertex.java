@@ -1,6 +1,7 @@
 package ej_1;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -15,10 +16,10 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	
 	/*
 	 * listaMetrosDisponibles [100,50,75] en el huerto 0 quedan 100m, en el huerto1 quedan 50m,...
-	 * ConjuntoReparto lista de conjuntos de enteros [{1,2} {3,5} {4} {}] en el huerto 0 esta plantada 1,2,...etc
+	 * ConjuntoReparto lista de conjuntos de enteros [{1,2}, {3,5}, {4}, {}] en el huerto 0 esta plantada 1,2,...etc
 	 */
-	public static Integer NumVariedades;
-	public static Integer NumHuertos;
+	public static Integer NumVariedades = FactoriaHuertos.getNumeroVariedades();
+	public static Integer NumHuertos = FactoriaHuertos.getNumeroHuertos();
 	
 	public static HuertoVertex of(Integer i, List<Set<Integer>> r, List<Integer> l ) {
 		return new HuertoVertex(i, r, l);
@@ -29,8 +30,23 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * 		Esta funcion le da el vertice de salida a la interfaz grafo
 		 * le damos un indice y los atributos iniciales para trabajar el problema.
 		 */
-		NumHuertos = FactoriaHuertos.getNumeroHuertos();
-		return of(0, new ArrayList<Set<Integer>>(), List2.rangeList(0, NumHuertos));
+		return of(0, creaConjInicial(), crealistaInicial());
+	}
+	
+	public static List<Integer> crealistaInicial(){
+		List<Integer> res = new ArrayList<Integer>();
+		for (int i = 0; i < NumHuertos; i++) {
+			res.add(FactoriaHuertos.getMetrosDisponibleH(i));
+		}
+		return res;
+	}
+	public static List<Set<Integer>> creaConjInicial(){
+		 List<Set<Integer>> listaDeConjuntos = new ArrayList<>();
+        for (int i = 0; i < NumHuertos; i++) {
+            Set<Integer> conjunto = new HashSet<>();
+            listaDeConjuntos.add(conjunto);
+        }
+        return listaDeConjuntos;
 	}
 	
 	public static Predicate<HuertoVertex> goal() {
@@ -41,14 +57,24 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * 
 		 */
 		
-		return v -> v.index() == FactoriaHuertos.getNumeroVariedades();
+		return v -> v.index() == NumVariedades;
 	}
 	public static Predicate<HuertoVertex> goalHasSolution() {
 		/*
 		 * Este hay que darselo a AStar para decirle que es la mejor solucion, siempre son vertice finales.
 		 */
-		return null;	
+		/*
+		 * return v -> v.index() == NumVariedades ||
+		 * 	todasLasVariedadesPlantadas(v);
+		 */
+         return v -> true;   
+		 
 	}
+	private static boolean todasLasVariedadesPlantadas(HuertoVertex v) {
+		// Verificar si todas las variedades están plantadas en los huertos disponibles
+	    return v.reparto().stream().allMatch(set -> set.size() == NumVariedades);
+	}
+
 	public static Integer mejorOpcion(Integer i, List<Set<Integer>> r, List<Integer> l) {
 		return IntStream.range(0, r.size())
 				.map(id -> r.get(id).size())
@@ -63,7 +89,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * escojo el indice del huerto, si no, huertos.size()+1, esto indica que no se planta
 		 */
 		List<Integer> opciones=List2.empty();
-		if(index<FactoriaHuertos.getNumeroHuertos()) {
+		if(index < NumVariedades) { //Comprobacion que no estamos en la ultima variedad, si no devolver una lista vacia
 			/*
 			 * 			En este caso se puede plantear de la siguiente manera, tenemos la variable reparto,
 			 *  que es la que nos dice las variedades que estan plantadas en cada huerto, vamos a recorrer 
@@ -74,21 +100,60 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 			 *  		Despues tenemos que comprobar si hay metros disponibles, cogeremos de la variedad del vertice 
 			 *  actual los metros requeridos, y comprobaremos si en los huertos que tengo como opcion se puede plantar, 
 			 *  en caso de que se plante en un huerto, habra que actualizar la lista de metros disponible despues de 
-			 *  plantar la variedad en el huerto seleccionado plantado (Este ultimo paso nose si hay que hacerlo aquí).
+			 *  plantar la variedad en el huerto seleccionado plantado (Este ultimo paso se hace en neighbor).
 			 */
+			for (int i = 0; i < NumHuertos; i++) {
+				if (listaMetrosDisponible.get(i) > FactoriaHuertos.getMetrosRequeridosS(index)) {
+					if (reparto.get(i).isEmpty()) {
+						opciones.add(i);
+					} else {
+						for (int z = 0; z < reparto.size(); z++) {
+							Set<Integer> conjunto = reparto.get(z);
+						    for (Integer entero : conjunto) {
+						        if(FactoriaHuertos.esIncompatible(entero, index) == 0) {
+						        	opciones.add(i);
+						        }   
+						    }
+						}
+					}
+					
+				}
+			}
+			
 		}
-		return null;
+		return opciones;
 	}
 
 	@Override
 	public HuertoVertex neighbor(Integer a) {
-		List<Set<Integer>> s = List2.copy(reparto); //Esto esta mal, hacerlo mejor, esto tiene que calcular el vertice siguiente
-		s.remove(a);
-		return of(index+1, s, listaMetrosDisponible);
+	    List<Set<Integer>> s = List2.copy(reparto);
+	    List<Integer> newMetrosDisponibles = new ArrayList<>(listaMetrosDisponible);
+
+	    if (a < NumHuertos) { // Si a < Número de huertos, se planta una variedad en el huerto indicado por a
+	        int huertoSeleccionado = a;
+	        int metrosRequeridos = FactoriaHuertos.getMetrosRequeridosS(index);
+	        
+	        // Verificar si hay suficientes metros disponibles en el huerto seleccionado
+	        if (newMetrosDisponibles.get(huertoSeleccionado) >= metrosRequeridos) {
+	        	
+	            // Actualizar el conjunto de variedades plantadas en el huerto seleccionado
+	            s.get(huertoSeleccionado).add(index);
+	            
+	            // Actualizar los metros disponibles en el huerto seleccionado después de plantar la variedad
+	            newMetrosDisponibles.set(huertoSeleccionado, newMetrosDisponibles.get(huertoSeleccionado) - metrosRequeridos);
+	        }
+	    }
+	    
+	    // Devolver un nuevo vértice con el índice incrementado y las propiedades actualizadas
+	    return of(index + 1, s, newMetrosDisponibles);
 	}
 
 	@Override
 	public HuertoEdge edge(Integer a) {
+		/*
+		 * 		Normalmente aqui hay que devolver algo mas si tengo muchas 
+		 * propiedades individuales. mirarlo con detenimiento.
+		 */
 		return HuertoEdge.of(this, neighbor(a), a);
 	}
 

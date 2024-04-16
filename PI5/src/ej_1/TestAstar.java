@@ -23,12 +23,12 @@ public class TestAstar {
 		Predicate<HuertoVertex> goal = HuertoVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
+		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Max)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.build();
 		
 		//Este es AStar, hay que decirle cuales son correctas
-		AStar<HuertoVertex, HuertoEdge, SolucionHuerto> Astar_alg=AStar.of(graph);
+		AStar<HuertoVertex, HuertoEdge, SolucionHuerto> Astar_alg = AStar.of(graph);
 		
 		GraphPath<HuertoVertex, HuertoEdge> path= Astar_alg.search().get();
 		/*
