@@ -18,6 +18,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	 * listaMetrosDisponibles [100,50,75] en el huerto 0 quedan 100m, en el huerto1 quedan 50m,...
 	 * ConjuntoReparto lista de conjuntos de enteros [{1,2}, {3,5}, {4}, {}] en el huerto 0 esta plantada 1,2,...etc
 	 */
+	
 	public static Integer NumVariedades = FactoriaHuertos.getNumeroVariedades();
 	public static Integer NumHuertos = FactoriaHuertos.getNumeroHuertos();
 	
@@ -59,20 +60,43 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		
 		return v -> v.index() == NumVariedades;
 	}
+	
 	public static Predicate<HuertoVertex> goalHasSolution() {
-		/*
-		 * Este hay que darselo a AStar para decirle que es la mejor solucion, siempre son vertice finales.
-		 */
-		/*
-		 * return v -> v.index() == NumVariedades ||
-		 * 	todasLasVariedadesPlantadas(v);
-		 */
-         return v -> true;   
-		 
-	}
-	private static boolean todasLasVariedadesPlantadas(HuertoVertex v) {
-		// Verificar si todas las variedades están plantadas en los huertos disponibles
-	    return v.reparto().stream().allMatch(set -> set.size() == NumVariedades);
+	    return v -> {
+	        // Verificar para cada huerto
+	        for (int i = 0; i < v.reparto().size(); i++) {
+	            Set<Integer> variedadesEnHuerto = v.reparto().get(i);
+
+	            // Verificar incompatibilidades
+	            for (Integer variedad : variedadesEnHuerto) {
+	                for (Integer otraVariedad : variedadesEnHuerto) {
+	                    if (variedad != otraVariedad && FactoriaHuertos.esIncompatible(variedad, otraVariedad) == 1) {
+	                        return false; // Hay incompatibilidad en el mismo huerto
+	                    }
+	                }
+	            }
+
+	            // Verificar suma de metros requeridos
+	            int metrosRequeridos = variedadesEnHuerto.stream()
+	                .mapToInt(variedad -> FactoriaHuertos.getMetrosRequeridosS(variedad))
+	                .sum();
+	            if (metrosRequeridos > FactoriaHuertos.getMetrosDisponibleH(i)) {
+	                return false; // La suma de metros requeridos supera los metros disponibles
+	            }
+
+	            // Verificar que cada variedad esté plantada en un solo huerto
+	            for (int j = i + 1; j < v.reparto().size(); j++) {
+	                Set<Integer> otrasVariedadesEnOtroHuerto = v.reparto().get(j);
+	                for (Integer variedad : variedadesEnHuerto) {
+	                    if (otrasVariedadesEnOtroHuerto.contains(variedad)) {
+	                        return false; // La variedad está plantada en más de un huerto
+	                    }
+	                }
+	            }
+	        }
+
+	        return true; // Todas las restricciones se cumplen
+	    };
 	}
 
 	public static Integer mejorOpcion(Integer i, List<Set<Integer>> r, List<Integer> l) {
@@ -103,13 +127,18 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 			 *  plantar la variedad en el huerto seleccionado plantado (Este ultimo paso se hace en neighbor).
 			 */
 			for (int i = 0; i < NumHuertos; i++) {
+				
 				if (listaMetrosDisponible.get(i) > FactoriaHuertos.getMetrosRequeridosS(index)) {
+					
 					if (reparto.get(i).isEmpty()) {
 						opciones.add(i);
+						
 					} else {
 						for (int z = 0; z < reparto.size(); z++) {
 							Set<Integer> conjunto = reparto.get(z);
+							
 						    for (Integer entero : conjunto) {
+						    	
 						        if(FactoriaHuertos.esIncompatible(entero, index) == 0) {
 						        	opciones.add(i);
 						        }   
@@ -121,6 +150,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 			}
 			
 		}
+		
 		return opciones;
 	}
 
@@ -143,11 +173,10 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	            newMetrosDisponibles.set(huertoSeleccionado, newMetrosDisponibles.get(huertoSeleccionado) - metrosRequeridos);
 	        }
 	    }
-	    
+	    //System.out.println("Una iter de neig: "+ s+"\n"+newMetrosDisponibles);
 	    // Devolver un nuevo vértice con el índice incrementado y las propiedades actualizadas
 	    return of(index + 1, s, newMetrosDisponibles);
 	}
-
 	@Override
 	public HuertoEdge edge(Integer a) {
 		/*

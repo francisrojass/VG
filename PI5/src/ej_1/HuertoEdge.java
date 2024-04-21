@@ -8,7 +8,7 @@ public record HuertoEdge(HuertoVertex source, HuertoVertex target,
 	//action decision que se toma que cojamos una arista o otra, de tipo del que convenga
 	
 	public static HuertoEdge of(HuertoVertex v1, HuertoVertex v2, Integer a) {
-	    double peso = (a == v1.listaMetrosDisponible().size() + 1) ? v1.listaMetrosDisponible().size() + 1 : a;
-	    return new HuertoEdge(v1, v2, a, peso);
+	    double peso = (a == v1.listaMetrosDisponible().size()) ? v1.listaMetrosDisponible().size() : a;
+	    return new HuertoEdge(v1, v2, a, (double) a);
 	}
 }

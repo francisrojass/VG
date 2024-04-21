@@ -14,7 +14,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestGreedy {
 
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio1DatosEntrada2.txt";
+		String filename="ficheros/Ejercicio1DatosEntrada3.txt";
 		FactoriaHuertos.iniDatos(filename);
 		
 		HuertoVertex verticeInicial = HuertoVertex.initial();
@@ -33,8 +33,8 @@ public class TestGreedy {
 		 */
 		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		System.out.println(gp_actions);
-		//SolucionHuerto sol = SolucionHuerto.of(gp_actions);
-		//System.out.println(sol);
+		SolucionHuerto sol = SolucionHuerto.of(gp_actions);
+		System.out.println(sol);
 	}
 
 }
