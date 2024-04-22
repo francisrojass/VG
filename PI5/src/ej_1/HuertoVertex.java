@@ -60,7 +60,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 */
 		return v -> v.index() == NumVariedades;
 	}
-	
+
 	public static Predicate<HuertoVertex> goalHasSolution() {
 	    return v -> {
 	        // Verificar para cada huerto

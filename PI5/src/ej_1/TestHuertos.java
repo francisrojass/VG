@@ -14,7 +14,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestHuertos {
 
 	public static void main(String[] args) {
-		FactoriaHuertos.iniDatos("ficheros/Ejercicio1DatosEntrada1.txt");
+		FactoriaHuertos.iniDatos("ficheros/Ejercicio1DatosEntrada2.txt");
 		testAstar();
 		System.out.println("\n");
 		testBT();
@@ -26,7 +26,7 @@ public class TestHuertos {
 		return EGraph.virtual(
 				HuertoVertex.initial(),
 				HuertoVertex.goal(),
-				PathType.Last,
+				PathType.Sum,
 				Type.Max)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.heuristic(HuertoHeuristic::heuristic)

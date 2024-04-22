@@ -23,7 +23,7 @@ public class TestAstar {
 		Predicate<HuertoVertex> goal = HuertoVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Max)
+		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Max)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.heuristic(HuertoHeuristic::heuristic)
 				.build();
