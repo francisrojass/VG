@@ -15,7 +15,7 @@ public class TestAstar {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String filename="ficheros/Ejercicio1DatosEntrada1.txt";
+		String filename="ficheros/Ejercicio1DatosEntrada3.txt";
 		FactoriaHuertos.iniDatos(filename);
 		
 		HuertoVertex verticeInicial = HuertoVertex.initial();
