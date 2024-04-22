@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import us.lsi.common.List2;
+import us.lsi.common.Set2;
 import us.lsi.graphs.virtual.VirtualVertex;
 
 public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<Integer> presupuestoRestante, Integer acumValoracion) 
@@ -63,13 +64,15 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 
 	@Override
 	public CestaVertex neighbor(Integer a) {
-		Set<Integer> NewCategoriasPorCubrir = categoriasPorCubrir;
-		List<Integer> NewPresupuestoRestante = presupuestoRestante;
+		Set<Integer> NewCategoriasPorCubrir = Set2.copy(categoriasPorCubrir);
+		List<Integer> NewPresupuestoRestante = List2.copy(presupuestoRestante);
 		Integer NewAcumValoracion = acumValoracion;
-		if (true) { // este a==1 es provisional, nose como voy a saber si se selecciona producto o no??
+		
+		if (a == 1) { 
 			if (NewCategoriasPorCubrir.contains(FactoriaCesta.getCategoriaAG(index))) {
 				NewCategoriasPorCubrir.remove(FactoriaCesta.getCategoriaAG(index));
 			}
+			
 			NewPresupuestoRestante.set(
 					FactoriaCesta.getCategoriaAG(index), 
 					NewPresupuestoRestante.get(FactoriaCesta.getCategoriaAG(index)) - FactoriaCesta.getPrecio(index));

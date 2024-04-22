@@ -1,4 +1,4 @@
-package ej_1;
+package ej_2;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -6,38 +6,36 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
+import ej_1.SolucionHuerto;
 import us.lsi.graphs.alg.GreedyOnGraph;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
-public class TestGreedy {
-
+public class TestGreedy2 {
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio1DatosEntrada2.txt";
-		FactoriaHuertos.iniDatos(filename);
+		String filename="ficheros/Ejercicio2DatosEntrada1.txt";
+		FactoriaCesta.iniDatos(filename);
 		
-		HuertoVertex verticeInicial = HuertoVertex.initial();
+		CestaVertex verticeInicial = CestaVertex.initial();
 		
-		Predicate<HuertoVertex> goal = HuertoVertex.goal();
+		Predicate<CestaVertex> goal = CestaVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<HuertoVertex, HuertoEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Max)
-				.heuristic(HuertoHeuristic::heuristic)
-				.goalHasSolution(HuertoVertex.goalHasSolution())
+		EGraph<CestaVertex, CestaEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Min)
+				.goalHasSolution(CestaVertex.goalHasSolution())
 				.build();
 		/*
 		 * Este algoritmo es Boraz
 		 */
-		GreedyOnGraph<HuertoVertex, HuertoEdge> gg=GreedyOnGraph.of(graph);
-		GraphPath<HuertoVertex, HuertoEdge> path=gg.path();
+		GreedyOnGraph<CestaVertex, CestaEdge> gg = GreedyOnGraph.of(graph);
+		GraphPath<CestaVertex, CestaEdge> path = gg.path();
 		/*
 		 * Sacamos las actions de las aristas para darsela tipo cromosoma a nuestra clase solucion y sea visible al printear
 		 */
 		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		System.out.println(gp_actions);
-		SolucionHuerto sol = SolucionHuerto.of(gp_actions);
+		SolucionCesta sol = SolucionCesta.create(gp_actions);
 		System.out.println(sol);
 	}
-
 }

@@ -1,4 +1,4 @@
-package ej_1;
+package ej_2;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -11,32 +11,29 @@ import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
-public class TestAstar {
+public class TestAstar2 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String filename="ficheros/Ejercicio1DatosEntrada1.txt";
-		FactoriaHuertos.iniDatos(filename);
+		String filename="ficheros/Ejercicio2DatosEntrada1.txt";
 		
-		HuertoVertex verticeInicial = HuertoVertex.initial();
-		
-		Predicate<HuertoVertex> goal = HuertoVertex.goal();
+		FactoriaCesta.iniDatos(filename);
+		CestaVertex inicial= CestaVertex.initial();
+		Predicate<CestaVertex> goal = CestaVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Max)
-				.goalHasSolution(HuertoVertex.goalHasSolution())
-				.heuristic(HuertoHeuristic::heuristic)
+		EGraph<CestaVertex, CestaEdge> graph= EGraph.virtual(inicial,goal,PathType.Sum,Type.Min)
+				.goalHasSolution(CestaVertex.goalHasSolution())
 				.build();
 		
 		//Este es AStar, hay que decirle cuales son correctas
-		AStar<HuertoVertex, HuertoEdge, SolucionHuerto> Astar_alg = AStar.of(graph);
+		AStar<CestaVertex, CestaEdge, SolucionCesta> Astar_alg = AStar.of(graph);
 		
-		GraphPath<HuertoVertex, HuertoEdge> path= Astar_alg.search().get();
+		GraphPath<CestaVertex, CestaEdge> path= Astar_alg.search().get();
 		/*
 		 * Sacamos las actions de las aristas para darsela tipo cromosoma a nuestra clase solucion y sea visible al printear
 		 */
 		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
-		SolucionHuerto sol = SolucionHuerto.of(gp_actions);
+		SolucionCesta sol = SolucionCesta.create(gp_actions);
 		System.out.println(sol);
 	}
 

@@ -16,7 +16,9 @@ public class TestHuertos {
 	public static void main(String[] args) {
 		FactoriaHuertos.iniDatos("ficheros/Ejercicio1DatosEntrada1.txt");
 		testAstar();
+		System.out.println("\n");
 		testBT();
+		System.out.println("\n");
 		testPDR();
 	}
 	
@@ -24,7 +26,7 @@ public class TestHuertos {
 		return EGraph.virtual(
 				HuertoVertex.initial(),
 				HuertoVertex.goal(),
-				PathType.Sum,
+				PathType.Last,
 				Type.Max)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.heuristic(HuertoHeuristic::heuristic)

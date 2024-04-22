@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
-import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
@@ -23,7 +22,7 @@ public class TestBT {
 				Predicate<HuertoVertex> goal = HuertoVertex.goal();
 				
 				//No se si en el path type hay que ponerlo a sum
-				EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
+				EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Min)
 						.goalHasSolution(HuertoVertex.goalHasSolution())
 						.heuristic(HuertoHeuristic::heuristic)
 						.build();

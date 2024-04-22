@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 
 
 import us.lsi.common.List2;
+import us.lsi.common.Set2;
 import us.lsi.graphs.virtual.VirtualVertex;
 
 public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integer> listaMetrosDisponible) 
@@ -57,7 +58,6 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * siempre y cuando el indice inicial sea 0.
 		 * 
 		 */
-		
 		return v -> v.index() == NumVariedades;
 	}
 	
@@ -83,7 +83,6 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	            if (metrosRequeridos > FactoriaHuertos.getMetrosDisponibleH(i)) {
 	                return false; // La suma de metros requeridos supera los metros disponibles
 	            }
-
 	            // Verificar que cada variedad esté plantada en un solo huerto
 	            for (int j = i + 1; j < v.reparto().size(); j++) {
 	                Set<Integer> otrasVariedadesEnOtroHuerto = v.reparto().get(j);
@@ -94,7 +93,6 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	                }
 	            }
 	        }
-
 	        return true; // Todas las restricciones se cumplen
 	    };
 	}
@@ -113,6 +111,8 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		 * escojo el indice del huerto, si no, huertos.size()+1, esto indica que no se planta
 		 */
 		List<Integer> opciones=List2.empty();
+		opciones.add(NumHuertos); //opcion que indica que la variedad no se planta
+		
 		if(index < NumVariedades) { //Comprobacion que no estamos en la ultima variedad, si no devolver una lista vacia
 			/*
 			 * 			En este caso se puede plantear de la siguiente manera, tenemos la variable reparto,
@@ -150,15 +150,21 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 			}
 			
 		}
-		
+		//System.out.println(opciones);
 		return opciones;
 	}
 
 	@Override
 	public HuertoVertex neighbor(Integer a) {
-	    List<Set<Integer>> s = List2.copy(reparto);
-	    List<Integer> newMetrosDisponibles = new ArrayList<>(listaMetrosDisponible);
-
+	    List<Set<Integer>> s = List2.empty();
+	    
+	    for (int i = 0; i < NumHuertos; i++) {
+			s.add(Set2.copy(reparto.get(i)));
+		}
+	    
+	    List<Integer> newMetrosDisponibles = List2.copy(listaMetrosDisponible);
+	    //System.out.println("antiguo reparto: "+s);
+	    
 	    if (a < NumHuertos) { // Si a < Número de huertos, se planta una variedad en el huerto indicado por a
 	        int huertoSeleccionado = a;
 	        int metrosRequeridos = FactoriaHuertos.getMetrosRequeridosS(index);
@@ -167,13 +173,16 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	        if (newMetrosDisponibles.get(huertoSeleccionado) >= metrosRequeridos) {
 	        	
 	            // Actualizar el conjunto de variedades plantadas en el huerto seleccionado
+	        	// esto creo que se puede hacer con List2.setElement(hueco, indice, huecoAdar)
 	            s.get(huertoSeleccionado).add(index);
+	            
 	            
 	            // Actualizar los metros disponibles en el huerto seleccionado después de plantar la variedad
 	            newMetrosDisponibles.set(huertoSeleccionado, newMetrosDisponibles.get(huertoSeleccionado) - metrosRequeridos);
 	        }
 	    }
-	    //System.out.println("Una iter de neig: "+ s+"\n"+newMetrosDisponibles);
+	    
+	    //System.out.println("nuevo reparto: "+s);
 	    // Devolver un nuevo vértice con el índice incrementado y las propiedades actualizadas
 	    return of(index + 1, s, newMetrosDisponibles);
 	}
