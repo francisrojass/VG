@@ -14,7 +14,7 @@ import us.lsi.path.EGraphPath.PathType;
 
 public class TestGreedy2 {
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio2DatosEntrada1.txt";
+		String filename="ficheros/Ejercicio2DatosEntrada2.txt";
 		FactoriaCesta.iniDatos(filename);
 		
 		CestaVertex verticeInicial = CestaVertex.initial();

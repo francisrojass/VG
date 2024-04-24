@@ -38,7 +38,9 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 	}
 	
 	public static Predicate<CestaVertex> goalHasSolution(){
-		return v->v.categoriasPorCubrir.isEmpty() && v.acumValoracion >= 0;
+		return v->	v.categoriasPorCubrir.size() == 0 && 
+					v.acumValoracion > 0 && 
+					v.presupuestoRestante.stream().allMatch(x -> x >= 0);			
 	}
 	
 	@Override
@@ -64,7 +66,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 		List<Integer> NewPresupuestoRestante = List2.copy(presupuestoRestante);
 		Integer NewAcumValoracion = acumValoracion;
 		
-		
+		//System.out.println(NewCategoriasPorCubrir);
 		if (a == 1) { 
 			if (NewCategoriasPorCubrir.contains(FactoriaCesta.getCategoriaAG(index))) {
 				NewCategoriasPorCubrir.remove(FactoriaCesta.getCategoriaAG(index));
@@ -76,7 +78,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 			
 			NewAcumValoracion = NewAcumValoracion + FactoriaCesta.getValoracion(index) - 3;
 		}
-		
+		//System.out.println(NewPresupuestoRestante);
 		return of(index + 1, NewCategoriasPorCubrir, NewPresupuestoRestante, NewAcumValoracion);
 	}
 

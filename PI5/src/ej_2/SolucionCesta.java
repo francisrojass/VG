@@ -30,7 +30,7 @@ public class SolucionCesta {
 		
 		@Override
 		public String toString() {
-			return " Productos Seleccionados son: " + productSelect + " Precio total de la cesta:: " + price;
+			return " Productos Seleccionados son: " + productSelect + " Precio total de la cesta: " + price;
 			
 		}
 		

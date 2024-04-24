@@ -22,7 +22,7 @@ public class TestGreedy {
 		Predicate<HuertoVertex> goal = HuertoVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<HuertoVertex, HuertoEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
+		EGraph<HuertoVertex, HuertoEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Max)
 				.heuristic(HuertoHeuristic::heuristic)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.build();
