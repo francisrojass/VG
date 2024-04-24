@@ -7,11 +7,12 @@ import java.util.stream.Collectors;
 import org.jgrapht.GraphPath;
 
 import us.lsi.graphs.alg.AStar;
+import us.lsi.graphs.alg.BT;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
-public class TestAstar2 {
+public class TestBT2 {
 
 	public static void main(String[] args) {
 		String filename="ficheros/Ejercicio2DatosEntrada1.txt";
@@ -20,25 +21,22 @@ public class TestAstar2 {
 		CestaVertex inicial= CestaVertex.initial();
 		Predicate<CestaVertex> goal = CestaVertex.goal();
 		
-		/*
-		 * Para darle los parametros bien. PathType se le da Sum o Last, 
-		 * esto se refiere al valor de la arista si quiere que vayamos sumando o 
-		 * nos quedemos con la ultima. Type.min o max se refiere a si queremos minimizar o maximizar.
-		 */
-		
+		//No se si en el path type hay que ponerlo a sum
 		EGraph<CestaVertex, CestaEdge> graph= EGraph.virtual(inicial,goal,PathType.Sum,Type.Min)
 				.goalHasSolution(CestaVertex.goalHasSolution())
-				.heuristic(CestaHeuristic::heuristic)
 				.build();
 		
 		//Este es AStar, hay que decirle cuales son correctas
-		AStar<CestaVertex, CestaEdge, SolucionCesta> Astar_alg = AStar.of(graph);
+		BT<CestaVertex, CestaEdge, SolucionCesta> BT_alg = BT.of(graph);
 		
-		GraphPath<CestaVertex, CestaEdge> path= Astar_alg.search().get();
-	
+		GraphPath<CestaVertex, CestaEdge> path= BT_alg.search().get();
+		/*
+		 * Sacamos las actions de las aristas para darsela tipo cromosoma a nuestra clase solucion y sea visible al printear
+		 */
 		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		SolucionCesta sol = SolucionCesta.create(gp_actions);
 		System.out.println(sol);
+
 	}
 
 }

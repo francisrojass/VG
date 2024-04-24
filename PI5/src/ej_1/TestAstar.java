@@ -22,7 +22,11 @@ public class TestAstar {
 		
 		Predicate<HuertoVertex> goal = HuertoVertex.goal();
 		
-		//No se si en el path type hay que ponerlo a sum
+		/*
+		 * Para darle los parametros bien. PathType se le da Sum o Last, 
+		 * esto se refiere al valor de la arista si quiere que vayamos sumando o 
+		 * nos quedemos con la ultima. Type.min o max se refiere a si queremos minimizar o maximizar.
+		 */
 		EGraph<HuertoVertex, HuertoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Max)
 				.goalHasSolution(HuertoVertex.goalHasSolution())
 				.heuristic(HuertoHeuristic::heuristic)

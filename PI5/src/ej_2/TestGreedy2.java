@@ -22,7 +22,7 @@ public class TestGreedy2 {
 		Predicate<CestaVertex> goal = CestaVertex.goal();
 		
 		//No se si en el path type hay que ponerlo a sum
-		EGraph<CestaVertex, CestaEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Last,Type.Min)
+		EGraph<CestaVertex, CestaEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
 				.goalHasSolution(CestaVertex.goalHasSolution())
 				.build();
 		/*

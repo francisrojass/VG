@@ -17,7 +17,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 		return new CestaVertex(i, c, p, v);
 	}
 	public static CestaVertex initial() {
-		return of(0, CreaConjunto(), creaLista(), 0);
+		return of(0, creaConjunto(), creaLista(), 0);
 	}
 	private static List<Integer> creaLista() {
 		List<Integer> res=new ArrayList<>();
@@ -26,7 +26,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 		}
 		return res;
 	}
-	private static Set<Integer> CreaConjunto() {
+	private static Set<Integer> creaConjunto() {
 		Set<Integer> res=new HashSet<>();
 		for (int i = 0; i < FactoriaCesta.getNumCategorias(); i++) {
 			res.add(i);
@@ -38,28 +38,24 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 	}
 	
 	public static Predicate<CestaVertex> goalHasSolution(){
-		return v->v.categoriasPorCubrir.isEmpty();
+		return v->v.categoriasPorCubrir.isEmpty() && v.acumValoracion >= 0;
 	}
 	
 	@Override
 	public List<Integer> actions() {
-		
-		List<Integer> opciones=List2.empty();
-		opciones.add(0);
-		
-		if(index < FactoriaCesta.getNumProductos()) {
-			
-			Integer categoria = FactoriaCesta.getCategoriaAG(index);
-			
-			if (categoriasPorCubrir.contains(categoria)) {
-				
-				if(FactoriaCesta.getPrecio(index) < presupuestoRestante.get(categoria)) {
-					opciones.add(1);
-				}
-			}
-			
-		}
-		return opciones;
+	    List<Integer> opciones = new ArrayList<>();
+	    
+	    if(index < FactoriaCesta.getNumProductos()) {
+	        Integer categoria = FactoriaCesta.getCategoriaAG(index);
+	        
+	        if (categoriasPorCubrir.contains(categoria) && FactoriaCesta.getPrecio(index) < presupuestoRestante.get(categoria)) {
+	            opciones.add(1);
+	        }
+	        
+	        opciones.add(0); // Siempre hay la opción de no elegir el producto
+	    }
+	    
+	    return opciones;
 	}
 
 	@Override
@@ -67,6 +63,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 		Set<Integer> NewCategoriasPorCubrir = Set2.copy(categoriasPorCubrir);
 		List<Integer> NewPresupuestoRestante = List2.copy(presupuestoRestante);
 		Integer NewAcumValoracion = acumValoracion;
+		
 		
 		if (a == 1) { 
 			if (NewCategoriasPorCubrir.contains(FactoriaCesta.getCategoriaAG(index))) {
@@ -79,6 +76,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 			
 			NewAcumValoracion = NewAcumValoracion + FactoriaCesta.getValoracion(index) - 3;
 		}
+		
 		return of(index + 1, NewCategoriasPorCubrir, NewPresupuestoRestante, NewAcumValoracion);
 	}
 

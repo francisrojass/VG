@@ -1,7 +1,9 @@
 package ej_2;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import us.lsi.common.Files2;
@@ -98,6 +100,13 @@ public class FactoriaCesta {
 	
 	public static void main(String[] args) {
 		iniDatos("ficheros/Ejercicio2DatosEntrada1.txt");
+	}
+	
+	public static int getPrecioMinimoCategoria(int categoria2) {
+		Optional<Producto> res = ListaProductos.stream()
+                .filter(producto -> producto.Categoria == categoria) // Filtrar por categoría
+                .min(Comparator.comparingInt(Producto::Precio));
+		return res.get().Precio;
 	}
 
 
