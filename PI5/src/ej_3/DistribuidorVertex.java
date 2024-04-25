@@ -39,7 +39,18 @@ public record DistribuidorVertex(Integer index, List<Integer> unidadesRestantes,
 		return v -> v.index() == (ListaDestino.size() * ListaProductos.size());
 	}
 	public static Predicate<DistribuidorVertex> goalHasSolution() {
-		return v -> true;
+		return v -> restriccion(v.demandasRestantes);
+	}
+	
+	
+	public static Boolean restriccion(List<Integer> lista) {
+		Boolean res = true;
+		for (int i = 0; i < lista.size(); i++) {
+			if(lista.get(i)>0) {
+				res = false;
+			}
+		}
+		return res;
 	}
 	@Override
 	public List<Integer> actions() {

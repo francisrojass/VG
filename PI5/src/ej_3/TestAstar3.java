@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
-import us.lsi.graphs.alg.GreedyOnGraph;
+import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
 import us.lsi.path.EGraphPath.PathType;
 
-public class TestGreedy3 {
+public class TestAstar3 {
 
 	public static void main(String[] args) {
 		String filename="ficheros/Ejercicio3DatosEntrada1.txt";
@@ -21,18 +21,20 @@ public class TestGreedy3 {
 		
 		Predicate<DistribuidorVertex> goal = DistribuidorVertex.goal();
 		
-		EGraph<DistribuidorVertex, DistribuidorEdge> graph = EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
-				.goalHasSolution(DistribuidorVertex.goalHasSolution())
-				.build();
-
-		GreedyOnGraph<DistribuidorVertex, DistribuidorEdge> gg = GreedyOnGraph.of(graph);
-		GraphPath<DistribuidorVertex, DistribuidorEdge> path = gg.path();
-	
-		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		
-		System.out.println(gp_actions);
+		EGraph<DistribuidorVertex, DistribuidorEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Min)
+				.goalHasSolution(DistribuidorVertex.goalHasSolution())
+				//.heuristic(DistribuidorHeuristic::heuristic)
+				.build();
+		
+		AStar<DistribuidorVertex, DistribuidorEdge, SolucionDistribuidor> Astar_alg = AStar.of(graph);
+		
+		GraphPath<DistribuidorVertex, DistribuidorEdge> path= Astar_alg.search().get();
+		
+		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		SolucionDistribuidor sol = SolucionDistribuidor.of_Range(gp_actions);
 		System.out.println(sol);
+
 	}
 
 }
