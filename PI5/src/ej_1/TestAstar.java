@@ -14,7 +14,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestAstar {
 
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio1DatosEntrada3.txt";
+		String filename="ficheros/Ejercicio1DatosEntrada1.txt";
 		FactoriaHuertos.iniDatos(filename);
 		
 		HuertoVertex verticeInicial = HuertoVertex.initial();

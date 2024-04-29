@@ -15,7 +15,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestBT2 {
 
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio2DatosEntrada1.txt";
+		String filename="ficheros/Ejercicio2DatosEntrada3.txt";
 		
 		FactoriaCesta.iniDatos(filename);
 		CestaVertex inicial= CestaVertex.initial();
