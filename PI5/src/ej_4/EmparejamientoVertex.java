@@ -30,7 +30,7 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 		
 		if(index < NumPersonas) return opciones;
 		
-		return null;
+		return opciones;
 	}
 
 	@Override
