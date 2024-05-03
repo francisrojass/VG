@@ -29,7 +29,7 @@ public class TestGreedy {
 		/*
 		 * Este algoritmo es Boraz
 		 */
-		GreedyOnGraph<HuertoVertex, HuertoEdge> gg=GreedyOnGraph.of(graph);
+		GreedyOnGraph<HuertoVertex, HuertoEdge> gg = GreedyOnGraph.of(graph);
 		GraphPath<HuertoVertex, HuertoEdge> path=gg.path();
 		/*
 		 * Sacamos las actions de las aristas para darsela tipo cromosoma a nuestra clase solucion y sea visible al printear

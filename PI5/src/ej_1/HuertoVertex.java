@@ -61,6 +61,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 		return v -> v.index() == NumVariedades;
 	}
 
+	
 	public static Predicate<HuertoVertex> goalHasSolution() {
 	    return v -> {
 	        // Verificar para cada huerto
@@ -128,7 +129,7 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 			 */
 			for (int i = 0; i < NumHuertos; i++) {
 				
-				if (listaMetrosDisponible.get(i) > FactoriaHuertos.getMetrosRequeridosS(index)) {
+				if (listaMetrosDisponible.get(i) >= FactoriaHuertos.getMetrosRequeridosS(index)) {
 					
 					if (reparto.get(i).isEmpty()) {
 						opciones.add(i);

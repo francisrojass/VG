@@ -11,69 +11,70 @@ import us.lsi.common.Map2;
 
 public class Huerto_PD {
 	
-	public static record SpH(Integer coste, Integer alternativa) implements Comparable<SpH> {
-		public int compareTo(SpH o) {
-			return coste.compareTo(o.coste);
+	public static record Sph(Integer a,Integer weight) implements Comparable<Sph> {
+		public static Sph of(Integer a, Integer weight) {
+			return new Sph(a,weight);
+		}
+		public int compareTo(Sph sp) {
+			return this.weight.compareTo(sp.weight);
 		}
 	}
+	public static Map<HuertoProblema, Sph> memory;
+	public static Integer mejorValor = Integer.MIN_VALUE;
 	
-	public static Map<HuertoProblema, SpH> memory;
-	public static Integer mejorValor = Integer.MAX_VALUE;
-	
-	public static SpH search() {
+	public static void main(String[] args) {
 		memory = Map2.empty();
-		HuertoProblema inicial = HuertoProblema.initial();
+		mejorValor = Integer.MIN_VALUE;
 		
-		SpH resultado = pdr_search(inicial, memory, 0);
-		return resultado;
+		pdr(HuertoProblema.initial(), 0, memory);
+		getSolucion();
 	}
-	
-	public static SpH pdr_search(HuertoProblema problema, Map<HuertoProblema, SpH> memory, Integer valorAcum) {
-		
-		Boolean esTerminal = problema.index().equals(FactoriaHuertos.getNumeroVariedades());
-		Boolean esSolucion = true; //este es el goalHasSolutions, hacerlo
-		
-		if (memory.containsKey(problema))
-		{
-			return memory.get(problema);
-		}
-		else if(esTerminal && esSolucion)
-		{
-			/*
-			 * Casos Bases del problema
-			 * Por ejemplo comprobar si hemos llegado al final del array
-			 */
-			SpH solucion = new SpH(0, null);
-			memory.put(problema, solucion);
-			return solucion;
-		}
-		else 
-		{
-			List<SpH> soluciones=List2.empty();
-			for(Integer action: problema.actions()) {
-				/*
-				 * El acum es lo que lleve acumlao mas lo de ahora en cada problema es diferente
-				 */
+	private static Sph pdr(HuertoProblema prob, int acum, Map<HuertoProblema, Sph> memoria) {
+		Sph r = null;
+		if(memory.containsKey(prob)) {
+			r = memory.get(prob);
+			
+		} else if(HuertoProblema.goalHasSolution(prob)) {
+			r = Sph.of(null, 0);
+			memory.put(prob, r);
+			if (acum > mejorValor) {
+				mejorValor = acum;
+			}
+			
+		}else {
+			List<Sph> ls = List2.empty();
+			for(Integer a:prob.actions()) {
+				if (acum + cota(prob, a) > mejorValor) {
+					Sph sh = pdr(prob.neighbor(a), acum + pesoArista(prob,a), memoria);
+					if (sh!=null) {
+						r = Sph.of(a, pesoArista(prob, a) + sh.weight);
+						ls.add(r);
+					}
+				}
 				
-				SpH res = pdr_search(problema.neighbor(action), memory, valorAcum);
-				if (res!=null)
-					soluciones.add(res);
 			}
-			SpH solucion = soluciones.stream().min(Comparator.naturalOrder()).orElse(null);
-			if (solucion!=null) {
-				memory.put(problema, solucion);
+			if (r!=null) {
+				r=ls.stream().max(Comparator.naturalOrder()).get();
+				memory.put(prob, r);
+				
 			}
-			return solucion;
 		}
+		return r;
+	}
+	private static double cota(HuertoProblema prob, Integer a) {
+		return pesoArista(prob, a) + HuertoProblema.heuristic(prob.neighbor(a));
+	}
+	private static Integer pesoArista(HuertoProblema prob, Integer a) {
+		return a == FactoriaHuertos.getNumeroVariedades()?0:1;
 	}
 	
 	public static SolucionHuerto getSolucion() {
 		List<Integer> actions = List2.empty();
-		SpH sph = memory.get(HuertoProblema.initial());
+		Sph sph = memory.get(HuertoProblema.initial());
 		HuertoProblema prob = HuertoProblema.initial();
-		while (sph!=null && sph.alternativa!=null) {
-			actions.add(sph.alternativa);
-			prob = prob.neighbor(sph.alternativa);
+		while (sph!=null && sph.a!=null) {
+			actions.add(sph.a);
+			prob = prob.neighbor(sph.a);
 			
 		}
 		return SolucionHuerto.of(actions);

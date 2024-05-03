@@ -25,6 +25,7 @@ public static List<Persona> ListaPersonas;
 		return ListaPersonas.get(i).nacionalidad();
 	}
 	public static Integer getAfinidad(Integer i, Integer j) {
+		if(i==j) return 0;
 		return ListaPersonas.get(i).afinidades().get(j).intValue();
 	}
 	public static List<String> getIdiomas(Integer i){

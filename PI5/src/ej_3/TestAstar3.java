@@ -29,7 +29,7 @@ public class TestAstar3 {
 		
 		AStar<DistribuidorVertex, DistribuidorEdge, SolucionDistribuidor> Astar_alg = AStar.of(graph);
 		
-		GraphPath<DistribuidorVertex, DistribuidorEdge> path= Astar_alg.search().get();
+		GraphPath<DistribuidorVertex, DistribuidorEdge> path = Astar_alg.search().get();
 		
 		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
 		SolucionDistribuidor sol = SolucionDistribuidor.of_Range(gp_actions);
