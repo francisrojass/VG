@@ -13,8 +13,9 @@ public record EmparejamientoEdge(EmparejamientoVertex source, EmparejamientoVert
 			peso = FactoriaEmparejamiento.getAfinidad(0, a);
 			
 		} else {
-			peso = v1.index()%2 == 0 ? FactoriaEmparejamiento.getAfinidad(v1.ultima(), a) : 0;
+			peso =( v1.index()%2 == 0 ? FactoriaEmparejamiento.getAfinidad(v1.ultima(), a) : 0);
 		}
+		System.out.println(v1.index() + " ultima:"+ v1.ultima()+" Peso:"+ peso+ " a: "+ a);
 		return new EmparejamientoEdge(v1, v2, a, peso);
 	}
 

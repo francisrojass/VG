@@ -26,6 +26,9 @@ public class Huerto_PD {
 		memory = Map2.empty();
 		mejorValor = Integer.MIN_VALUE;
 		
+		String filename = "ficheros/Ejercicio1DatosEntrada1.txt";
+		FactoriaHuertos.iniDatos(filename);
+		
 		pdr(HuertoProblema.initial(), 0, memory);
 		getSolucion();
 	}

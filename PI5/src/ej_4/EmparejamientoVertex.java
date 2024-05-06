@@ -23,16 +23,16 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 	}
 	public static Set<Integer> creaConj(){
 		Set<Integer> res = Set2.empty();
-		for (int i = 0; i < NumPersonas; i++) {
+		for (int i = 1; i < NumPersonas; i++) {
 			res.add(i);
 		}
 		return res;
 	}
 	public static Predicate<EmparejamientoVertex> goal(){
-		return v -> v.index == NumPersonas;
+		return v -> v.index.equals(NumPersonas-1);
 	}
 	public static Predicate<EmparejamientoVertex> goalHasSolution(){
-		return v -> v.restante.size() == 0;
+		return v -> v.restante.isEmpty();
 		//return v -> true;
 	}
 	
@@ -40,46 +40,35 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 	public List<Integer> actions() {
 		List<Integer> opciones = List2.empty();
 		
-		if(index > NumPersonas) return opciones;
+		if(index >= NumPersonas) return opciones;
 		
 		if (index%2 != 0) {
 			
 			for (Integer persona: restante) {
 				opciones.add(persona);
 			}
-			
+			//System.out.println(opciones+" " + "ultima: " + ultima+ " index: "+ index + " Restante: " +restante);
 			return opciones;
 			
 		} else {
+			List<String> izq = new ArrayList<String>();
+			
+			if(index==0) {
+				izq = FactoriaEmparejamiento.getIdiomas(0);
+			}else {
+				izq = FactoriaEmparejamiento.getIdiomas(ultima);
+			}
 			
 			for (Integer persona: restante) {
-				List<String> izq = new ArrayList<String>();
-				
-				if(index==0) {
-					izq = FactoriaEmparejamiento.getIdiomas(0);
-				}else {
-					izq = FactoriaEmparejamiento.getIdiomas(ultima);
-				}
 				
 				List<String> der = FactoriaEmparejamiento.getIdiomas(persona);
 				
 				if(tienenElementoComun(izq, der)) {
-					Integer res = null;
-					if(index==0) {
-						res=0;
-					}else {
-						res=ultima;
-					}
-					if(Math.abs(FactoriaEmparejamiento.getEdad(res) - FactoriaEmparejamiento.getEdad(persona)) <= 5) {
-						Integer res2 = null;
-						if(index==0) {
-							res2 = 0;
-						}else {
-							res2 = ultima;
-						}
-						if (!(FactoriaEmparejamiento.getNacionalidad(res2).equals(FactoriaEmparejamiento.getNacionalidad(persona)))) {
+					
+					if(Math.abs(FactoriaEmparejamiento.getEdad(ultima) - FactoriaEmparejamiento.getEdad(persona)) <= 5) {
+						
+						if (!(FactoriaEmparejamiento.getNacionalidad(ultima).equals(FactoriaEmparejamiento.getNacionalidad(persona)))) {
 							opciones.add(persona);
-							System.out.println(opciones + "hola");
 						}
 					}
 				}
@@ -87,6 +76,7 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 						
 			}
 		}	
+		//System.out.println(opciones+" " + "ultima: " + ultima+ " index: "+ index + " Restante: " +restante);
 		return opciones;
 	}
 
@@ -103,7 +93,7 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 	public EmparejamientoVertex neighbor(Integer a) {
 		Set<Integer> NewRestante = Set2.copy(restante);
 		Integer NewUltima = ultima;
-		
+		/*
 		if (index%2 == 0) {
 			
 			NewUltima = NumPersonas;
@@ -112,7 +102,8 @@ public record EmparejamientoVertex(Integer index, Set<Integer> restante, Integer
 			
 			NewUltima = a;
 		}
-		
+		*/
+		NewUltima = a;
 		NewRestante.remove(a);
 		
 		return of(index + 1, NewRestante, NewUltima);

@@ -28,7 +28,7 @@ public class TestBT4 {
 		 */
 		EGraph<EmparejamientoVertex, EmparejamientoEdge> graph= EGraph.virtual(verticeInicial,goal,PathType.Sum,Type.Max)
 				.goalHasSolution(EmparejamientoVertex.goalHasSolution())
-				//.heuristic(EmparejamientoHeuristic::heuristic)
+				.heuristic(EmparejamientoHeuristic::heuristic)
 				.build();
 		
 		//Este es AStar, hay que decirle cuales son correctas
@@ -38,7 +38,7 @@ public class TestBT4 {
 		/*
 		 * Sacamos las actions de las aristas para darsela tipo cromosoma a nuestra clase solucion y sea visible al printear
 		 */
-		List<Integer> gp_actions = path.getEdgeList().stream().map(x->x.action()).collect(Collectors.toList());
+		List<Integer> gp_actions = path.getVertexList().stream().map(x->x.ultima()).collect(Collectors.toList());
 		SolucionEmparejamiento sol = SolucionEmparejamiento.of(gp_actions);
 		System.out.println(sol);
 
