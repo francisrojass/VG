@@ -22,22 +22,24 @@ public class Huerto_PD {
 	public static Map<HuertoProblema, Sph> memory;
 	public static Integer mejorValor = Integer.MIN_VALUE;
 	
-	public static void main(String[] args) {
+	public static SolucionHuerto search() {
 		memory = Map2.empty();
 		mejorValor = Integer.MIN_VALUE;
 		
-		String filename = "ficheros/Ejercicio1DatosEntrada1.txt";
-		FactoriaHuertos.iniDatos(filename);
-		
-		pdr(HuertoProblema.initial(), 0, memory);
-		getSolucion();
+		pdr(HuertoProblema.initial(), 0);
+		return getSolucion();
 	}
-	private static Sph pdr(HuertoProblema prob, int acum, Map<HuertoProblema, Sph> memoria) {
+
+	private static Sph pdr(HuertoProblema prob, int acum) {
+		Boolean esTerminal = prob.index() == FactoriaHuertos.getNumeroVariedades();
+		Boolean esSolucion = true;
+		
+		
 		Sph r = null;
 		if(memory.containsKey(prob)) {
 			r = memory.get(prob);
 			
-		} else if(HuertoProblema.goalHasSolution(prob)) {
+		} else if(esTerminal && esSolucion) {
 			r = Sph.of(null, 0);
 			memory.put(prob, r);
 			if (acum > mejorValor) {
@@ -46,29 +48,32 @@ public class Huerto_PD {
 			
 		}else {
 			List<Sph> ls = List2.empty();
-			for(Integer a:prob.actions()) {
-				if (acum + cota(prob, a) > mejorValor) {
-					Sph sh = pdr(prob.neighbor(a), acum + pesoArista(prob,a), memoria);
-					if (sh!=null) {
-						r = Sph.of(a, pesoArista(prob, a) + sh.weight);
-						ls.add(r);
-					}
+			for(Integer a: prob.actions()) {
+				Double cota = acotar(acum,prob, a); 
+				if (cota <= mejorValor) {
+					continue;
+				}
+				HuertoProblema vecino = prob.neighbor(a);
+				Integer weight = a != FactoriaHuertos.getNumeroHuertos() ? 1 :0;
+				
+				Sph s = pdr(vecino, acum + weight);
+				if (s != null) {
+					Sph amp = Sph.of(a, s.weight() + weight);
+					ls.add(amp);
 				}
 				
 			}
+			r = ls.stream().max(Comparator.naturalOrder()).orElse(null);
 			if (r!=null) {
-				r=ls.stream().max(Comparator.naturalOrder()).get();
-				memory.put(prob, r);
-				
+				memory.put(prob, r);				
 			}
 		}
 		return r;
 	}
-	private static double cota(HuertoProblema prob, Integer a) {
-		return pesoArista(prob, a) + HuertoProblema.heuristic(prob.neighbor(a));
-	}
-	private static Integer pesoArista(HuertoProblema prob, Integer a) {
-		return a == FactoriaHuertos.getNumeroVariedades()?0:1;
+	private static Double acotar(Integer acum, HuertoProblema p, Integer a) {
+		//Integer pesoArista = a != FactoriaHuertos.getNumeroHuertos() ? 1 :0;
+		//return acum + pesoArista + p.neighbor(a).heuristic(p);
+		return 1000.;
 	}
 	
 	public static SolucionHuerto getSolucion() {

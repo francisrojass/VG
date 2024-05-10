@@ -183,7 +183,6 @@ public record HuertoVertex(Integer index, List<Set<Integer>> reparto, List<Integ
 	        }
 	    }
 	    
-	    //System.out.println("nuevo reparto: "+s);
 	    // Devolver un nuevo vértice con el índice incrementado y las propiedades actualizadas
 	    return of(index + 1, s, newMetrosDisponibles);
 	}

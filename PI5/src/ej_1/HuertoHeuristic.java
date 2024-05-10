@@ -22,46 +22,6 @@ public class HuertoHeuristic {
 	 * las que tengo ya plantadas, ver si es incompatible o no me queda mas espacio
 	 */
 	
-	/*
-	 * public static Double heuristic(HuertoVertex v1, Predicate<HuertoVertex> goal, HuertoVertex v2) {
-		int numVariedadesRestantes = FactoriaHuertos.getNumeroVariedades() - v2.index();
-	    int numHuertosConEspacio = 0;
-
-	    // Verificar para cada variedad restante
-	    for (int i = v2.index(); i < FactoriaHuertos.getNumeroVariedades(); i++) {
-	        int metrosRequeridos = FactoriaHuertos.getMetrosRequeridosS(i);
-	        boolean puedePlantarse = false;
-
-	        // Verificar si hay algún huerto disponible para plantar la variedad actual
-	        for (int j = 0; j < v2.listaMetrosDisponible().size(); j++) {
-	            if (v2.listaMetrosDisponible().get(j) >= metrosRequeridos) {
-	                boolean compatible = true;
-
-	                // Verificar incompatibilidades con las variedades ya plantadas en el huerto
-	                for (Integer variedad : v2.reparto().get(j)) {
-	                    if (FactoriaHuertos.esIncompatible(variedad, i) == 1) {
-	                        compatible = false;
-	                        break;
-	                    }
-	                }
-
-	                if (compatible) {
-	                    puedePlantarse = true;
-	                    break;
-	                }
-	            }
-	        }
-
-	        if (puedePlantarse) {
-	            numHuertosConEspacio++;
-	        }
-	    }
-
-	    // Devolver el número total de variedades que aún pueden ser plantadas en el huerto representado por v2
-	    return (double) (numHuertosConEspacio + numVariedadesRestantes);
-	}
-	 */
-	
 	public static Double heuristic(HuertoVertex v1, Predicate<HuertoVertex> goal, HuertoVertex v2) {
 		int numVariedadesRestantes = FactoriaHuertos.getNumeroVariedades() - v1.index();
 	    int numHuertosConEspacio = 0;

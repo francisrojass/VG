@@ -90,7 +90,7 @@ public record HuertoProblema(Integer index, List<Set<Integer>> reparto, List<Int
 	public static boolean goalHasSolution(HuertoProblema prob) {
 		return prob.index == FactoriaHuertos.getNumeroVariedades();
 	}
-	public static Double heuristic(HuertoProblema v1) {
+	public Double heuristic(HuertoProblema v1) {
 		int numVariedadesRestantes = FactoriaHuertos.getNumeroVariedades() - v1.index();
 	    int numHuertosConEspacio = 0;
 
