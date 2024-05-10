@@ -71,9 +71,8 @@ public class Huerto_PD {
 		return r;
 	}
 	private static Double acotar(Integer acum, HuertoProblema p, Integer a) {
-		//Integer pesoArista = a != FactoriaHuertos.getNumeroHuertos() ? 1 :0;
-		//return acum + pesoArista + p.neighbor(a).heuristic(p);
-		return 1000.;
+		Integer pesoArista = a != FactoriaHuertos.getNumeroHuertos() ? 1 :0;
+		return acum + pesoArista + p.neighbor(a).heuristic(p);
 	}
 	
 	public static SolucionHuerto getSolucion() {

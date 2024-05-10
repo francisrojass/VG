@@ -15,7 +15,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestPDR2 {
 
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio2DatosEntrada2.txt";
+		String filename="ficheros/Ejercicio2DatosEntrada3.txt";
 		
 		FactoriaCesta.iniDatos(filename);
 		CestaVertex inicial= CestaVertex.initial();
@@ -24,7 +24,7 @@ public class TestPDR2 {
 		//No se si en el path type hay que ponerlo a sum
 		EGraph<CestaVertex, CestaEdge> graph= EGraph.virtual(inicial,goal,PathType.Sum,Type.Min)
 				.goalHasSolution(CestaVertex.goalHasSolution())
-				//.heuristic(CestaHeuristic::heuristic)
+				.heuristic(CestaHeuristic::heuristic)
 				.build();
 		
 		//Este es AStar, hay que decirle cuales son correctas

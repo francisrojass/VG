@@ -38,7 +38,7 @@ public record CestaVertex(Integer index,Set<Integer> categoriasPorCubrir, List<I
 	}
 	
 	public static Predicate<CestaVertex> goalHasSolution(){
-		return v->	v.categoriasPorCubrir.size() == 0;// && 
+		return v->	v.categoriasPorCubrir.size() == 0 ;//&& 
 					//v.acumValoracion > 0 && 
 					//v.presupuestoRestante.stream().allMatch(x -> x >= 0);
 

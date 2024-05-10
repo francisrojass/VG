@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.GraphPath;
 
-import us.lsi.graphs.alg.AStar;
 import us.lsi.graphs.alg.BT;
 import us.lsi.graphs.virtual.EGraph;
 import us.lsi.graphs.virtual.EGraph.Type;
@@ -15,7 +14,7 @@ import us.lsi.path.EGraphPath.PathType;
 public class TestBT2 {
 
 	public static void main(String[] args) {
-		String filename="ficheros/Ejercicio2DatosEntrada2.txt";
+		String filename="ficheros/Ejercicio2DatosEntrada3.txt";
 		
 		FactoriaCesta.iniDatos(filename);
 		CestaVertex inicial= CestaVertex.initial();

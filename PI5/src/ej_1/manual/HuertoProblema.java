@@ -11,6 +11,8 @@ import us.lsi.common.List2;
 import us.lsi.common.Set2;
 
 public record HuertoProblema(Integer index, List<Set<Integer>> reparto, List<Integer> listaMetrosDisponible) {
+	
+	
 	public static Integer NumVariedades = FactoriaHuertos.getNumeroVariedades();
 	public static Integer NumHuertos = FactoriaHuertos.getNumeroHuertos();
 	
